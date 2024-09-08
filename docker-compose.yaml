@@ -1,10 +1,14 @@
+# docker network create my-network
+
 networks:
-  nginx-proxy:
+  default:
     driver: bridge
+  my-network:
+    external: true
 
 volumes:
-  nginx_proxy_manager_data:
-  nginx_proxy_manager_letsencrypt:
+  npm_data:
+  npm_letsencrypt:
   grafana_data:
   grafana_log:
   grafana_plugins:
@@ -19,7 +23,7 @@ volumes:
   duckdns_config:
 
 services:
-  nginx-proxy:
+  npm:
     image: "jc21/nginx-proxy-manager:latest"
     container_name: nginx-proxy-manager
     restart: unless-stopped
@@ -28,10 +32,10 @@ services:
       - "81:81"
       - "443:443"
     volumes:
-      - nginx_proxy_manager_data:/data
-      - nginx_proxy_manager_letsencrypt:/etc/letsencrypt
+      - npm_data:/data
+      - npm_letsencrypt:/etc/letsencrypt
     networks:
-      - nginx-proxy
+      - my-network
 
   grafana:
     image: grafana/grafana:latest
@@ -52,7 +56,7 @@ services:
     # ports:
     #   - "3000:3000"
     networks:
-      - nginx-proxy
+      - my-network
 
   postgres:
     image: postgres:16.0
@@ -69,7 +73,7 @@ services:
     # ports:
     #   - "5432:5432"
     networks:
-      - nginx-proxy
+      - my-network
     healthcheck:
       test:
         [
@@ -98,7 +102,7 @@ services:
     # ports:
     #   - "9000:9000"
     networks:
-      - nginx-proxy
+      - my-network
     depends_on:
       postgres:
         condition: service_healthy
@@ -113,7 +117,7 @@ services:
     # ports:
     #   - "9090:9090"
     networks:
-      - nginx-proxy
+      - my-network
 
   uptime-kuma:
     image: louislam/uptime-kuma:1
@@ -121,7 +125,7 @@ services:
     restart: unless-stopped
     volumes:
       - uptime-kuma_data:/app/data
-    ports:
-      - "3001:3001"
+    # ports:
+    #   - "3001:3001"
     networks:
-      - nginx-proxy
+      - my-network
