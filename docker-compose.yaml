@@ -129,3 +129,17 @@ services:
     #   - "3001:3001"
     networks:
       - my-network
+
+  duckdns:
+    image: lscr.io/linuxserver/duckdns:latest
+    container_name: duckdns
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+      - SUBDOMAINS=aralvesandrade
+      - TOKEN=3c3fd688-d653-42c4-a462-40a9059766a6
+    volumes:
+      - duckdns_config:/config
+
