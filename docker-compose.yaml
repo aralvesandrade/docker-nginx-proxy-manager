@@ -21,6 +21,7 @@ volumes:
   prometheus:
   uptime-kuma_data:
   duckdns_config:
+  portainer_data:
 
 services:
   npm:
@@ -127,6 +128,19 @@ services:
       - uptime-kuma_data:/app/data
     # ports:
     #   - "3001:3001"
+    networks:
+      - my-network
+
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - portainer_data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    # ports:
+    #   - "9000:9000"
     networks:
       - my-network
 
