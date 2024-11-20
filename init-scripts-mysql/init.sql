@@ -1,11 +1,11 @@
 -- npm
 CREATE DATABASE npm;
-CREATE USER 'npm'@'localhost' IDENTIFIED BY 'npm';
-GRANT ALL PRIVILEGES ON *.* TO 'npm'@'localhost';
+CREATE USER 'npm'@'%' IDENTIFIED BY 'npm';
+GRANT ALL PRIVILEGES ON npm.* TO 'npm'@'%';
 FLUSH PRIVILEGES;
 
 -- ecom
 CREATE DATABASE ecom_db;
-CREATE USER 'ecom_user'@'localhost' IDENTIFIED BY '123_password';
-GRANT ALL PRIVILEGES ON *.* TO 'ecom_user'@'localhost';
+CREATE USER 'ecom_user'@'%' IDENTIFIED BY '123_password';
+GRANT ALL PRIVILEGES ON ecom_db.* TO 'ecom_user'@'%';
 FLUSH PRIVILEGES;
