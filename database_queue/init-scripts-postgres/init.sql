@@ -1,0 +1,9 @@
+-- sonar
+CREATE DATABASE sonar;
+CREATE USER sonar WITH PASSWORD 'sonar';
+GRANT ALL PRIVILEGES ON DATABASE sonar TO sonar;
+
+-- ipool
+CREATE DATABASE ipool_db;
+CREATE USER ipool_user WITH PASSWORD '123_password';
+GRANT ALL PRIVILEGES ON DATABASE ipool_db TO ipool_user;

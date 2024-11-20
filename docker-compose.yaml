@@ -1,10 +1,7 @@
-# docker network create my-network
-
 networks:
-  default:
-    driver: bridge
   my-network:
     external: true
+    driver: bridge
 
 volumes:
   npm_data:
@@ -13,8 +10,6 @@ volumes:
   grafana_log:
   grafana_plugins:
   grafana_provisioning:
-  postgres:
-  postgres_data:
   sonarqube_data:
   sonarqube_extensions:
   sonarqube_logs:
@@ -32,11 +27,20 @@ services:
       - "80:80"
       - "81:81"
       - "443:443"
+    environment:
+      - DB_MYSQL_HOST=mysql
+      - DB_MYSQL_PORT=3306
+      - DB_MYSQL_USER=npm
+      - DB_MYSQL_PASSWORD=npm
+      - DB_MYSQL_NAME=npm
     volumes:
       - npm_data:/data
       - npm_letsencrypt:/etc/letsencrypt
     networks:
       - my-network
+    # depends_on:
+    #   mysql:
+    #     condition: service_healthy
 
   grafana:
     image: grafana/grafana:latest
@@ -59,33 +63,6 @@ services:
     networks:
       - my-network
 
-  postgres:
-    image: postgres:16.0
-    container_name: postgres
-    restart: unless-stopped
-    environment:
-      - POSTGRES_DB=sonar
-      - POSTGRES_USER=sonar
-      - POSTGRES_PASSWORD=sonar
-      - TZ=America/Sao_Paulo
-    volumes:
-      - postgres:/var/lib/postgresql
-      - postgres_data:/var/lib/postgresql/data
-    # ports:
-    #   - "5432:5432"
-    networks:
-      - my-network
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U sonar -d sonar -h localhost",
-        ]
-      interval: 5s
-      timeout: 10s
-      retries: 3
-      start_period: 0s
-
   sonarqube:
     image: sonarqube:9.9.4-community
     container_name: sonarqube
@@ -104,9 +81,9 @@ services:
     #   - "9000:9000"
     networks:
       - my-network
-    depends_on:
-      postgres:
-        condition: service_healthy
+    # depends_on:
+    #   postgres:
+    #     condition: service_healthy
 
   prometheus:
     image: prom/prometheus:latest
@@ -156,4 +133,5 @@ services:
       - TOKEN=3c3fd688-d653-42c4-a462-40a9059766a6
     volumes:
       - duckdns_config:/config
-
+    networks:
+      - my-network
