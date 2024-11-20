@@ -38,9 +38,9 @@ services:
       - npm_letsencrypt:/etc/letsencrypt
     networks:
       - my-network
-    # depends_on:
-    #   mysql:
-    #     condition: service_healthy
+    depends_on:
+      mysql:
+        condition: service_healthy
 
   grafana:
     image: grafana/grafana:latest
@@ -81,9 +81,9 @@ services:
     #   - "9000:9000"
     networks:
       - my-network
-    # depends_on:
-    #   postgres:
-    #     condition: service_healthy
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   prometheus:
     image: prom/prometheus:latest

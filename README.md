@@ -4,6 +4,15 @@ Criar network
 docker network create my-network
 ```
 
+Executar comandos docker compose
+
+```
+docker compose -f docker-compose.yml -f docker-compose.database.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.database.yml down
+#ou
+docker compose -f docker-compose.yml -f docker-compose.database.yml down -v
+```
+
 Acessar postgres
 
 ```
