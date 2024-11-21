@@ -138,6 +138,22 @@ services:
     networks:
       - my-network
 
+  mysql_exporter:
+    image: prom/mysqld-exporter
+    container_name: mysql_exporter
+    restart: unless-stopped
+    command:
+      - --config.my-cnf=/cfg/config.my-cnf
+    volumes:
+      - ./mysql-exporter/config.my-cnf:/cfg/config.my-cnf
+    ports:
+      - 9104:9104
+    networks:
+      - my-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
   postgres_exporter:
     image: wrouesnel/postgres_exporter:latest
     container_name: postgres_exporter
