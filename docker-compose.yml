@@ -17,6 +17,7 @@ volumes:
   uptime-kuma_data:
   duckdns_config:
   portainer_data:
+  postgres_exporter_data:
 
 services:
   npm:
@@ -52,6 +53,7 @@ services:
       - GF_USERS_ALLOW_SIGN_UP=false
       - ENV GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel,grafana-clock-panel,grafana-simple-json-datasource
       - GF_LOG_MODE=console
+      - GF_FEATURE_TOGGLES_ENABLE=autoMigrateOldPanels
       - TZ=America/Sao_Paulo
     volumes:
       - grafana_data:/var/lib/grafana
@@ -135,3 +137,50 @@ services:
       - duckdns_config:/config
     networks:
       - my-network
+
+  postgres_exporter:
+    image: wrouesnel/postgres_exporter:latest
+    container_name: postgres_exporter
+    restart: unless-stopped
+    environment:
+      - DATA_SOURCE_NAME=postgresql://root:123_password@postgres:5432/?sslmode=disable
+    volumes:
+      - postgres_exporter_data:/var/lib/postgres_exporter
+    networks:
+      - my-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    networks:
+      - my-network
+    depends_on:
+      - prometheus
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    container_name: cadvisor
+    restart: unless-stopped
+    privileged: true
+    command: "-port 9188"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+      - /sys/fs/cgroup:/cgroup:ro
+      - /etc/machine-id:/etc/machine-id:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - my-network
+    depends_on:
+      - prometheus
