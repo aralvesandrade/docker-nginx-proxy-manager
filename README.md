@@ -78,3 +78,10 @@ INSERT INTO npm.proxy_host
 (created_on, modified_on, owner_user_id, domain_names, forward_host, forward_port, certificate_id, ssl_forced, meta, locations, advanced_config)
 VALUES(now(), now(), 1, '["uptime.aralvesandrade.duckdns.org"]', 'uptime-kuma', 3001, 2, 1, '{"nginx_err": null, "nginx_online": true, "dns_challenge": false, "letsencrypt_agree": false}', '[]', '');
 ```
+
+Exemplo de como monitorar o mysql usando as metricas do prometheus, antes disso criar token na API no Uptime Kuma para autenticação.
+
+```
+https://uptime.aralvesandrade.duckdns.org/metrics
+curl -G 'https://prometheus.aralvesandrade.duckdns.org/api/v1/query' --data-urlencode 'query=monitor_status{monitor_name="mysql"}'
+```

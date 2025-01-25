@@ -33,3 +33,11 @@ scrape_configs:
   - job_name: "cadvisor"
     static_configs:
       - targets: ["cadvisor:9188"]
+
+  - job_name: "uptime_kuma"
+    scrape_interval: 25s
+    scheme: http
+    static_configs:
+      - targets: ['uptime-kuma:3001']
+    basic_auth: 
+      password: "uk3_QmghPKmZPq34yL4D07Mn2J8vnoaKxa602R7svlOa"
