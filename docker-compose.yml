@@ -22,7 +22,7 @@ volumes:
 
 services:
   npm:
-    image: "jc21/nginx-proxy-manager:latest"
+    image: "jc21/nginx-proxy-manager"
     container_name: nginx-proxy-manager
     restart: unless-stopped
     ports:
@@ -45,7 +45,7 @@ services:
         condition: service_healthy
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana
     container_name: grafana
     restart: unless-stopped
     environment:
@@ -67,7 +67,7 @@ services:
       - my-network
 
   sonarqube:
-    image: sonarqube:9.9.4-community
+    image: sonarqube:9-community
     container_name: sonarqube
     restart: unless-stopped
     environment:
@@ -89,7 +89,7 @@ services:
         condition: service_healthy
 
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus
     container_name: prometheus
     restart: unless-stopped
     volumes:
@@ -101,7 +101,7 @@ services:
       - my-network
 
   uptime-kuma:
-    image: louislam/uptime-kuma:latest
+    image: louislam/uptime-kuma
     container_name: uptime-kuma
     restart: unless-stopped
     volumes:
@@ -113,7 +113,7 @@ services:
       - my-network
 
   portainer:
-    image: portainer/portainer
+    image: portainer/portainer-ce
     container_name: portainer
     privileged: true
     restart: unless-stopped
@@ -126,7 +126,7 @@ services:
       - my-network
 
   duckdns:
-    image: lscr.io/linuxserver/duckdns:latest
+    image: lscr.io/linuxserver/duckdns
     container_name: duckdns
     restart: unless-stopped
     environment:
@@ -157,7 +157,7 @@ services:
         condition: service_healthy
 
   postgres_exporter:
-    image: wrouesnel/postgres_exporter:latest
+    image: wrouesnel/postgres_exporter
     container_name: postgres_exporter
     restart: unless-stopped
     environment:
@@ -171,7 +171,7 @@ services:
         condition: service_healthy
 
   node_exporter:
-    image: prom/node-exporter:latest
+    image: prom/node-exporter
     container_name: node_exporter
     restart: unless-stopped
     volumes:
@@ -184,7 +184,7 @@ services:
       - prometheus
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    image: gcr.io/cadvisor/cadvisor
     container_name: cadvisor
     restart: unless-stopped
     privileged: true
@@ -198,6 +198,8 @@ services:
       - /sys/fs/cgroup:/cgroup:ro
       - /etc/machine-id:/etc/machine-id:ro
       - /etc/localtime:/etc/localtime:ro
+    devices:
+      - /dev/kmsg:/dev/kmsg
     networks:
       - my-network
     depends_on:
@@ -223,7 +225,7 @@ services:
         condition: service_healthy
 
   redis-insight:
-    image: redis/redisinsight:latest
+    image: redis/redisinsight
     container_name: redis-insight
     restart: unless-stopped
     volumes:
